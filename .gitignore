@@ -1,0 +1,14 @@
+autoconf.h
+.config
+.tmp_config
+.menuconfig.log
+*.o
+*.a
+*.map
+.depend
+tools/mkimage
+u-boot
+uboot.bin
+uboot.img
+u-boot.srec
+.*.sw?
