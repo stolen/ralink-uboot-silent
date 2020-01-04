@@ -247,6 +247,15 @@ int serial_init (void)
 	return (0);
 }
 
+int serial_break (void)
+{
+#if defined(RT6855A_ASIC_BOARD) || defined(RT6855A_FPGA_BOARD)
+#else
+	LCR(CFG_RT2880_CONSOLE) = LCR_WLS0 | LCR_WLS1 | LCR_SB;
+#endif
+	return (0);
+}
+
 
 /*
  * Output a single byte to the serial port.

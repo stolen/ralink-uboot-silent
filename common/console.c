@@ -374,8 +374,8 @@ int console_init_f (void)
 	DECLARE_GLOBAL_DATA_PTR;
 	gd->have_console = 1;
 #ifdef CONFIG_SILENT_CONSOLE
-	if (getenv("silent") != NULL)
-		gd->flags |= GD_FLG_SILENT;
+/* When we are here, env is not available. So just be silent until other code does anything else */
+	gd->flags |= GD_FLG_SILENT;
 #endif
 	return (0);
 }

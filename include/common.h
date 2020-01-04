@@ -436,6 +436,7 @@ ulong	get_tbclk     (void);
 
 /* $(CPU)/serial.c */
 int	serial_init   (void);
+int	serial_break  (void);
 void	serial_setbrg (void);
 void	serial_putc   (const char);
 void	serial_puts   (const char *);

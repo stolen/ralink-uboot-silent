@@ -39,8 +39,10 @@ extern unsigned int  CFG_BLOCKSIZE;
 #endif
 
 #include "../../autoconf.h"
-//#define DEBUG				1
-//#define ET_DEBUG
+#undef DEBUG
+#undef ET_DEBUG
+#define CONFIG_SILENT_CONSOLE		1
+
 #define CONFIG_RT2880_ETH		1	/* Enable built-in 10/100 Ethernet */
 
 #define CONFIG_MIPS32		1	/* MIPS 4Kc CPU core	*/

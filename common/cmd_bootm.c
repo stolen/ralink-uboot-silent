@@ -623,11 +623,12 @@ U_BOOT_CMD(
 static void
 fixup_silent_linux ()
 {
+/* Disabled because linker could not find strstr and strcat */
 	DECLARE_GLOBAL_DATA_PTR;
-	char buf[256], *start, *end;
+/*	char buf[256], *start, *end;
 	char *cmdline = getenv ("bootargs");
 
-	/* Only fix cmdline when requested */
+	// Only fix cmdline when requested
 	if (!(gd->flags & GD_FLG_SILENT))
 		return;
 
@@ -649,7 +650,7 @@ fixup_silent_linux ()
 	}
 
 	setenv ("bootargs", buf);
-	debug ("after silent fix-up: %s\n", buf);
+	debug ("after silent fix-up: %s\n", buf); */
 }
 #endif /* CONFIG_SILENT_CONSOLE */
 

@@ -1311,6 +1311,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	bd_t *bd;
 	int i;
 	int timer1= CONFIG_BOOTDELAY;
+	int silent = 0;
 	unsigned char BootType='3', confirm=0;
 	int my_tmp;
 	char addr_str[11];
@@ -1959,6 +1960,21 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	    char * s;
 	    s = getenv ("bootdelay");
 	    timer1 = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
+
+	    s = getenv ("silent");
+	    silent = s ? (int)simple_strtol(s, NULL, 10) : 0;
+	}
+
+/* restore console logging because we may need it for kernel earlyconsole */
+	gd->flags &= ~(GD_FLG_SILENT);
+	console_assign (stdin, "serial");
+	console_assign (stdout, "serial");
+	console_assign (stderr, "serial");
+/* set back silent flag if requested by env */
+	if ((silent & 1) == 0) {
+	} else {
+		gd->flags |= GD_FLG_SILENT;
+		timer1 = 0;
 	}
 
 	OperationSelect();   
@@ -1968,7 +1984,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		for (i=0; i<100; ++i) {
 			if ((my_tmp = tstc()) != 0) {	/* we got a key press	*/
 				timer1 = 0;	/* no more delay	*/
-				BootType = getc();
+				BootType = 0;
+				while (BootType < 32 || BootType > '9') BootType = getc(); /* ignore some garbage */
 				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))
 					BootType = '3';
 				printf("\n\rYou choosed %c\n\n", BootType);
@@ -1984,6 +2001,12 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		sprintf(addr_str, "0x%X", CFG_KERN_ADDR);
 		argv[1] = &addr_str[0];
 		printf("   \n3: System Boot system code via Flash.\n");
+
+		if (silent & 2) {
+			printf("setting UART SETBRK to disable further output\n");
+			serial_break();
+		}
+
 		do_bootm(cmdtp, 0, 2, argv);
 	}
 	else {
